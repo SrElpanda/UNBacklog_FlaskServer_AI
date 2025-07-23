@@ -2,4 +2,5 @@ flask
 flask-cors
 python-dotenv
 psycopg2-binary
+gunicorn 
 google-generativeai
