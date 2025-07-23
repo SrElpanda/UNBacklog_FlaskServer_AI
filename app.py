@@ -51,11 +51,11 @@ def limpiar_sql(texto):
     return texto.strip()
 
 #conexion con la DB y creacion del cursor de ejecución
-conn = conectar_DB()
-cur = conn.cursor()
 
 #Actualización de los trámites con IA
 def Actualizar_Tramites():
+    conn = conectar_DB()
+    cur = conn.cursor()
     
     try:
         genai.configure(api_key=API_KEY)
@@ -64,6 +64,8 @@ def Actualizar_Tramites():
         query = chat.send_message(prompt)
         cur.execute(limpiar_sql(query.text))
         conn.commit()
+        cur.close()
+        conn.close()
     except Exception as e:
         print(limpiar_sql(query.text))
         print("ocurrio un error",e)
@@ -72,6 +74,8 @@ Actualizar_Tramites()
 
 
 def buscar_tramites(query):
+    conn = conectar_DB()
+    cur = conn.cursor()
     like = f"%{query}%"
     cur.execute("SELECT titulo,descripcion,enlace,date_cierre FROM tramites_prueba WHERE titulo ILIKE %s OR descripcion ILIKE %s", (like, like))
     resultados = cur.fetchall()
